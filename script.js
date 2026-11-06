@@ -1,3 +1,4 @@
+
 let numOrOperator = document.querySelector("#calc-keypad");
 let calcScreen = document.querySelector("#calc-screen");
 let  arrayOfFirstSetNum = [];
@@ -13,12 +14,8 @@ numOrOperator.addEventListener('click', (event) => {
     arrayOfCtrl = ["AC", "CLR"];
     let target = event.target.textContent;
 
-    if(arrayOfOperators.includes(target) && arrayOfFirstSetNum.length > 0 && operatorCount === 1 && arrayOfSecondSetNum > 0) {
-        result = operator(arrayOfFirstSetNum, operatorSign, arrayOfSecondSetNum);
-        calcScreen.textContent = result;
 
-    }
-    else if(Number.isFinite(Number(target))) {
+    if(Number.isFinite(Number(target))) {
         if(arrayOfFirstSetNum.length < 12 && !otherThanNum) {
             arrayOfFirstSetNum.push(target);
             calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
@@ -57,26 +54,6 @@ numOrOperator.addEventListener('click', (event) => {
 
 });
 
-function operator(num1, opsSign, num2) {
-    let firstOps = Number(num1.join("")).toLocaleString('en-US');
-    let secondOps = Number(num2.join("")).toLocaleString('en-US');
-    
-    switch (opsSign) {
-        case ("+"):
-            addOperator(firstOps, secondOps)
-        break;
-        case ("-"):
-            subtractOperator(firstOps, secondOps)
-        break;
-        case ("*"):
-            multiplyOperator(firstOps, secondOps)
-        break;
-        case ("/"):
-            divideOperator(firstOps, secondOps)
-        break;
-    }
-}
-
 
 
 
@@ -98,14 +75,4 @@ function multiplyOperator (firstNum, secondNum) {
 
 function divideOperator (firstNum, secondNum) {
     return oneDecimalPlace(Number(firstNum / secondNum));
-}
-
-function oneDecimalPlace (aNum) {
-    console.log(typeof aNum);
-    if (Number.isInteger(aNum)) {
-        return aNum;
-    }
-    else {
-        return parseFloat(aNum.toFixed(1));
-    }
 }
