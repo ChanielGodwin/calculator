@@ -11,13 +11,33 @@ arrayOfCtrl = ["AC", "CLR"];
 
 numOrOperator.addEventListener('click', (event) => {
     let target = event.target.textContent;
+    let firsArrContent 
+    if (typeof arrayOfFirstSetNum !== "number") {
+        firsArrContent = !(arrayOfFirstSetNum.some(value => Number.isInteger(Number(value))));
+    }
 
-    if(arrayOfOperators.includes(target) && arrayOfFirstSetNum.length > 0 && operatorSignCounter === 1 && arrayOfSecondSetNum.length > 0) {
-        result = operator(arrayOfFirstSetNum, operatorSign, arrayOfSecondSetNum);
-        console.log(` this is the result ${result}`);
-        calcScreen.textContent = result;
+
+    if (arrayOfFirstSetNum.length === 0 && typeof arrayOfFirstSetNum !== "number" && target === "-") {
+        arrayOfFirstSetNum.push(target);
+        calcScreen.textContent = target;
 
     }
+    else if ((arrayOfFirstSetNum.length === 0 || typeof arrayOfFirstSetNum !== "number") && firsArrContent && target !== "-" && ["/", "*", "+", "="].includes(target)) {
+        calcScreen.textContent = target;
+        operatorSignCounter = 0;
+        operatorSign = [];
+
+    }
+    else if(arrayOfOperators.includes(target) && (arrayOfFirstSetNum.length > 0 || typeof arrayOfFirstSetNum === "number") && operatorSignCounter === 1 && arrayOfSecondSetNum.length > 0) {
+        result = operator(arrayOfFirstSetNum, operatorSign, arrayOfSecondSetNum);
+        calcScreen.textContent = result;
+        arrayOfFirstSetNum = result;
+        arrayOfSecondSetNum = [];
+        operatorSignCounter = 0;
+        operatorSign = undefined;
+        console.log(` this is the result ${result}`);
+    }
+
     else if(Number.isFinite(Number(target))) {
         if(arrayOfFirstSetNum.length < 12 && !otherThanNum) {
             arrayOfFirstSetNum.push(target);
@@ -50,16 +70,25 @@ numOrOperator.addEventListener('click', (event) => {
         arrayOfSecondSetNum = [];
         otherThanNum = false;
     }
-    console.log(arrayOfFirstSetNum);
-    console.log(arrayOfSecondSetNum);
-    console.log(otherThanNum)
+    console.log(`this is the fype ${typeof arrayOfFirstSetNum}`);
+    console.log(`this is the len ${arrayOfFirstSetNum.length}`);
+    console.log(`this is the fist arr ${arrayOfFirstSetNum}`);
 
+    console.log(`this is the type ${typeof arrayOfSecondSetNum}`);
+    console.log(`this is the len ${arrayOfSecondSetNum.length}`);
+    console.log(`this is the second arr ${arrayOfSecondSetNum}`);
+    console.log(otherThanNum);
+    console.log(operatorSignCounter);
+    console.log(operatorSign);
 });
 
 function operator(num1, opsSign, num2) {
     let firstOps;
     let secondOps;
-    if (num1.includes(".")) {
+    if (typeof num1 === "number") {
+        firstOps = num1;
+    }
+    else if (num1.includes(".")) {
         firstOps = parseFloat(num1.join("").toLocaleString('en-US'));
     }
     else {
