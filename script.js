@@ -1,21 +1,24 @@
-
 let numOrOperator = document.querySelector("#calc-keypad");
 let calcScreen = document.querySelector("#calc-screen");
 let  arrayOfFirstSetNum = [];
 let arrayOfSecondSetNum = [];
-let operatorSign;
-let operatorCount = 0;
+let operatorSign = [];
+let operatorSignCounter = 0;
 let otherThanNum = false;
 let result = 0;
+arrayOfOperators = ["/", "*", "-", "+", "="];
+arrayOfCtrl = ["AC", "CLR"];
 
 numOrOperator.addEventListener('click', (event) => {
-
-    arrayOfOperators = ["/", "*", "-", "+", "="];
-    arrayOfCtrl = ["AC", "CLR"];
     let target = event.target.textContent;
 
+    if(arrayOfOperators.includes(target) && arrayOfFirstSetNum.length > 0 && operatorSignCounter === 1 && arrayOfSecondSetNum.length > 0) {
+        result = operator(arrayOfFirstSetNum, operatorSign, arrayOfSecondSetNum);
+        console.log(` this is the result ${result}`);
+        calcScreen.textContent = result;
 
-    if(Number.isFinite(Number(target))) {
+    }
+    else if(Number.isFinite(Number(target))) {
         if(arrayOfFirstSetNum.length < 12 && !otherThanNum) {
             arrayOfFirstSetNum.push(target);
             calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
@@ -36,12 +39,12 @@ numOrOperator.addEventListener('click', (event) => {
     else if(arrayOfOperators.includes(target)) {
         calcScreen.textContent = target;
         operatorSign = target;
-        operatorCount++
+        operatorSignCounter ++
         otherThanNum = true;
     }
     else if(arrayOfCtrl.includes(target)) {
         calcScreen.textContent = target;
-        operatorCount = 0;
+        operatorSignCounter = 0;
         operatorSign = undefined;
         arrayOfFirstSetNum = [];
         arrayOfSecondSetNum = [];
@@ -50,9 +53,38 @@ numOrOperator.addEventListener('click', (event) => {
     console.log(arrayOfFirstSetNum);
     console.log(arrayOfSecondSetNum);
     console.log(otherThanNum)
-    console.log(result)
 
 });
+
+function operator(num1, opsSign, num2) {
+    let firstOps;
+    let secondOps;
+    if (num1.includes(".")) {
+        firstOps = parseFloat(num1.join("").toLocaleString('en-US'));
+    }
+    else {
+        firstOps = Number(num1.join("").toLocaleString('en-US'));
+    }
+    if (num2.includes(".")) {
+        secondOps = parseFloat(num2.join("").toLocaleString('en-US'));
+    }
+    else {
+        secondOps = Number(num2.join("").toLocaleString('en-US'));
+    }
+
+
+
+    switch (opsSign) {
+        case ("+"):
+            return addOperator(firstOps, secondOps);
+        case ("-"):
+            return subtractOperator(firstOps, secondOps);
+        case ("*"):
+            return multiplyOperator(firstOps, secondOps)
+        case ("/"):
+            return divideOperator(firstOps, secondOps);
+    }
+}
 
 
 
@@ -62,17 +94,17 @@ numOrOperator.addEventListener('click', (event) => {
 
 
 function addOperator (firstNum, secondNum) {
-    return oneDecimalPlace(Number(firstNum + secondNum));
+    return firstNum + secondNum;
 }
 
 function subtractOperator (firstNum, secondNum) {
-    return oneDecimalPlace(Number(firstNum - secondNum));
+    return firstNum - secondNum;
 }
 
 function multiplyOperator (firstNum, secondNum) {
-    return oneDecimalPlace(Number(firstNum * secondNum));
+    return firstNum * secondNum;
 }
 
 function divideOperator (firstNum, secondNum) {
-    return oneDecimalPlace(Number(firstNum / secondNum));
+    return firstNum / secondNum;
 }

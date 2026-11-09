@@ -13,6 +13,7 @@ A functional on-screen calculator that performs basic arithmetic operations, all
 
 | Date | Challenge | Solution |
 |---|---|---|
+| 9-11-2026 | Returns undefined when the the sum is computed | Each function has its own return statement, and each return statement determines what the function gives back to its caller |
 
 
 ## What I Learned
