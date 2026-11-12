@@ -7,7 +7,7 @@
     border: 2px solid rgb(115,115,115);
     background-color: rgb(240,240,240);
     width: 205px;
-    height: 320px;
+    height: 330px;
     border-radius: 20px 20px 10px 10px;
     padding: 10px;
     display: flex;
@@ -136,4 +136,14 @@
     background-color: rgb(188,188,188); 
     font-weight: normal;
     font-size: 16px;
+}
+#creator-footer {
+    background-color: rgb(240,240,240);
+    font-size: 6px;
+    color: rgb(75, 75, 75);
+    width: 185px;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

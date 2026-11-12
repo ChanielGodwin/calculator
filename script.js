@@ -2,6 +2,8 @@
 let numOrOperator = document.querySelector("#calc-keypad");
 let calcScreen = document.querySelector("#calc-screen");
 
+let allDivs = document.querySelectorAll(".calc-single-key, .calc-ctrl-keys, .calc-operation-keys, .key-big");
+
 //Variables Initialization
 let  arrayOfFirstSetNum = [];
 let arrayOfSecondSetNum = [];
@@ -13,7 +15,13 @@ arrayOfOperators = ["/", "*", "-", "+", "="];
 arrayOfCtrl = ["AC", "CE"];
 
 //Event listener
-numOrOperator.addEventListener('click', keyPressed)
+numOrOperator.addEventListener("click", keyPressed)
+allDivs.forEach(event => {
+    event.addEventListener("mouseenter", hoverKeys);
+    event.addEventListener("mouseout", (event) => { event.target.style.border = "1px solid rgb(148,148,148)";})
+});
+
+
 
 function keyPressed(event) {
     let target = event.target.textContent;
@@ -45,6 +53,7 @@ function keyPressed(event) {
             arrayOfSecondSetNum = [];
             operatorSignCounter = 0;
             operatorSign = undefined;
+            otherThanNum = false;
             }
             else {   
                 operatorSignCounter = 0;
@@ -62,6 +71,7 @@ function keyPressed(event) {
             arrayOfSecondSetNum = [];
             operatorSignCounter = 1;
             operatorSign = target;
+            otherThanNum = true;
             }
             else {
                 operatorSignCounter = 0;
@@ -75,7 +85,7 @@ function keyPressed(event) {
     }
 
     else if(Number.isFinite(Number(target))) {
-        if(arrayOfFirstSetNum.length < 12 && !otherThanNum) {
+        if(arrayOfFirstSetNum.length < 12 && !otherThanNum && operatorSignCounter === 0) {
             arrayOfFirstSetNum.push(target);
             calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
         }else if(arrayOfSecondSetNum.length < 12 && otherThanNum) {
@@ -83,7 +93,7 @@ function keyPressed(event) {
             calcScreen.textContent = Number(arrayOfSecondSetNum.join("")).toLocaleString('en-US');
         }
     } 
-    else if (arrayOfFirstSetNum.length < 12 && !otherThanNum && target ===  "."  && !arrayOfFirstSetNum.includes(target)) {
+    else if (arrayOfFirstSetNum.length < 12 && operatorSignCounter === 0 && !otherThanNum && target ===  "."  && !arrayOfFirstSetNum.includes(target)) {
         arrayOfFirstSetNum.push(target);
         calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
     }
@@ -152,6 +162,7 @@ function keyPressed(event) {
             }
         }
     }
+/**  
 console.log(`this is the operator sign ${operatorSign}`);
 console.log(`this is the operator sign counter ${operatorSignCounter}\n`);
 console.log("....")
@@ -160,14 +171,18 @@ console.log(`this is the first arr type ${typeof arrayOfFirstSetNum}`);
 console.log(`this is the first arr length ${arrayOfFirstSetNum.length}\n`);
 console.log("....")
 console.log(`this is the other num indicator ${otherThanNum}`);
-
+console.log("....")
+console.log(`this is the second arr ${arrayOfSecondSetNum}`);
+console.log(`this is the second arr type ${typeof arrayOfSecondSetNum}`);
+console.log(`this is the second arr length ${arrayOfSecondSetNum.length}\n`);
+**/   
 };
 
-
+console.log(numOrOperator)
 function operator(num1, opsSign, num2) {
     let firstOps;
     let secondOps;
-    
+
     if (num1.includes(".")) {
         firstOps = parseFloat(num1.join("").toLocaleString('en-US'));
     }
@@ -201,7 +216,20 @@ function operator(num1, opsSign, num2) {
 }
 
 
+function hoverKeys(event) {
+    let target = event.target;
 
+    if (["9", "8", "7", "6", "5", "4", "4", "3", "2", "1", "."].includes(target.textContent)) {
+        target.style.border = "3px solid rgb(255, 251, 251)"; 
+    }
+    else if (["AC", "CE"].includes(target.textContent)) {
+        target.style.border = "3px solid rgb(233, 229, 229)"; 
+    }
+    else if (["/", "*", "-", "+", "0", "="].includes(target.textContent)) {
+        target.style.border = "3px solid rgb(255, 214, 0)"; 
+    }
+
+}
 
 
 
