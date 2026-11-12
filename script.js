@@ -18,26 +18,25 @@ numOrOperator.addEventListener('click', keyPressed)
 function keyPressed(event) {
     let target = event.target.textContent;
     let firsArrContent 
-    if (typeof arrayOfFirstSetNum !== "number") {
-        firsArrContent = !(arrayOfFirstSetNum.some(value => Number.isInteger(Number(value))));
-    }
+    firsArrContent = !(arrayOfFirstSetNum.some(value => Number.isInteger(Number(value))));
 
-    if (arrayOfFirstSetNum.length < 12 && typeof arrayOfFirstSetNum !== "number" && target ===  "."  && arrayOfFirstSetNum.length === 0) {
+
+    if (arrayOfFirstSetNum.length < 12 && target ===  "."  && arrayOfFirstSetNum.length === 0) {
         arrayOfFirstSetNum.push("0", ".");
         calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
     }
-    else if (arrayOfFirstSetNum.length === 0 && typeof arrayOfFirstSetNum !== "number" && target === "-") {
+    else if (arrayOfFirstSetNum.length === 0 && target === "-") {
         arrayOfFirstSetNum.push(target);
         calcScreen.textContent = target;
 
     }
-    else if ((arrayOfFirstSetNum.length === 0 || typeof arrayOfFirstSetNum !== "number") && firsArrContent && target !== "-" && ["/", "*", "+", "="].includes(target)) {
+    else if (arrayOfFirstSetNum.length === 0 && firsArrContent && target !== "-" && ["/", "*", "+", "="].includes(target)) {
         calcScreen.textContent = target;
         operatorSignCounter = 0;
         operatorSign = [];
 
     }
-    else if(arrayOfOperators.includes(target) && (arrayOfFirstSetNum.length > 0 || typeof arrayOfFirstSetNum === "number") && operatorSignCounter === 1 && arrayOfSecondSetNum.length > 0) {
+    else if(arrayOfOperators.includes(target) && arrayOfFirstSetNum.length > 0 && operatorSignCounter === 1 && arrayOfSecondSetNum.length > 0) {
         if (target === "=") {
             result = operator(arrayOfFirstSetNum, operatorSign, arrayOfSecondSetNum);
             calcScreen.textContent = result;
@@ -99,40 +98,22 @@ function keyPressed(event) {
 
     else if(arrayOfOperators.includes(target)) {
         if (arrayOfSecondSetNum.length === 0 && operatorSignCounter === 0 && target === "=") {
-            if (typeof arrayOfFirstSetNum === "number") {
-                calcScreen.textContent = arrayOfFirstSetNum;
-                operatorSignCounter = 0;
-                operatorSign = undefined;
-                otherThanNum = false;
-            }
-            else {
+            calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
+            operatorSignCounter = 0;
+            operatorSign = undefined;
+            otherThanNum = false;   
+        }
+        else if (arrayOfSecondSetNum.length === 0 && operatorSignCounter === 1) {
+            if (target === "=") {
                 calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
                 operatorSignCounter = 0;
                 operatorSign = undefined;
                 otherThanNum = false;
             }
-            
-        }
-        else if (arrayOfSecondSetNum.length === 0 && operatorSignCounter === 1) {
-            if (target === "=") {
-                if (typeof arrayOfFirstSetNum === "number") {
-                    calcScreen.textContent = arrayOfFirstSetNum;
-                    operatorSignCounter = 0;
-                    operatorSign = undefined;
-                    otherThanNum = false;
-                }
-                else {
-                    calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
-                    operatorSignCounter = 0;
-                    operatorSign = undefined;
-                    otherThanNum = false;
-                }
-            }
             else {
                 calcScreen.textContent = target;
                 operatorSign = target;
             }
-
         }
         else {
             calcScreen.textContent = target;
@@ -152,24 +133,20 @@ function keyPressed(event) {
             otherThanNum = false;
         }
         else if (target === "CE") {
-            if (arrayOfFirstSetNum.length > 0 && typeof arrayOfFirstSetNum !== "number" && operatorSignCounter === 0 && arrayOfSecondSetNum.length === 0) {
+            if (arrayOfFirstSetNum.length > 0 && operatorSignCounter === 0 && arrayOfSecondSetNum.length === 0) {
                 arrayOfFirstSetNum.pop();
-                calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
-            }
-            else if (typeof arrayOfFirstSetNum === "number" && operatorSignCounter === 0 && arrayOfSecondSetNum.length === 0) {
-                arrayOfFirstSetNum = [];
                 arrayOfSecondSetNum = [];
                 operatorSignCounter = 0;
                 operatorSign = undefined;
                 otherThanNum = false;
                 calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
             }
-            else if (arrayOfFirstSetNum.length > 0 || typeof arrayOfFirstSetNum === "number" && operatorSignCounter > 0 && arrayOfSecondSetNum.length === 0) {
+            else if (arrayOfFirstSetNum.length > 0 && operatorSignCounter > 0 && arrayOfSecondSetNum.length === 0) {
                 operatorSignCounter = 0;
                 operatorSign = undefined;
                 calcScreen.textContent = " ";
             }
-            else if (arrayOfFirstSetNum.length > 0 || typeof arrayOfFirstSetNum === "number" && operatorSignCounter > 0 && arrayOfSecondSetNum.length > 0) {
+            else if (arrayOfFirstSetNum.length > 0 && operatorSignCounter > 0 && arrayOfSecondSetNum.length > 0) {
                 arrayOfSecondSetNum.pop();
                 calcScreen.textContent = Number(arrayOfSecondSetNum.join("")).toLocaleString('en-US');
             }
@@ -190,10 +167,8 @@ console.log(`this is the other num indicator ${otherThanNum}`);
 function operator(num1, opsSign, num2) {
     let firstOps;
     let secondOps;
-    if (typeof num1 === "number") {
-        firstOps = num1;
-    }
-    else if (num1.includes(".")) {
+    
+    if (num1.includes(".")) {
         firstOps = parseFloat(num1.join("").toLocaleString('en-US'));
     }
     else {
