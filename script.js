@@ -10,10 +10,12 @@ let operatorSignCounter = 0;
 let otherThanNum = false;
 let result = 0;
 arrayOfOperators = ["/", "*", "-", "+", "="];
-arrayOfCtrl = ["AC", "CLR"];
+arrayOfCtrl = ["AC", "CE"];
 
 //Event listener
-numOrOperator.addEventListener('click', (event) => {
+numOrOperator.addEventListener('click', keyPressed)
+
+function keyPressed(event) {
     let target = event.target.textContent;
     let firsArrContent 
     if (typeof arrayOfFirstSetNum !== "number") {
@@ -36,22 +38,41 @@ numOrOperator.addEventListener('click', (event) => {
 
     }
     else if(arrayOfOperators.includes(target) && (arrayOfFirstSetNum.length > 0 || typeof arrayOfFirstSetNum === "number") && operatorSignCounter === 1 && arrayOfSecondSetNum.length > 0) {
-        result = operator(arrayOfFirstSetNum, operatorSign, arrayOfSecondSetNum);
-        calcScreen.textContent = result;
-        if (typeof result !== "string"){
-        arrayOfFirstSetNum = result;
-        arrayOfSecondSetNum = [];
-        operatorSignCounter = 0;
-        operatorSign = undefined;
+        if (target === "=") {
+            result = operator(arrayOfFirstSetNum, operatorSign, arrayOfSecondSetNum);
+            calcScreen.textContent = result;
+            if (typeof result !== "string"){
+            arrayOfFirstSetNum = Array.from(String(result));
+            arrayOfSecondSetNum = [];
+            operatorSignCounter = 0;
+            operatorSign = undefined;
+            }
+            else {   
+                operatorSignCounter = 0;
+                operatorSign = undefined;
+                arrayOfFirstSetNum = [];
+                arrayOfSecondSetNum = [];
+                otherThanNum = false;
         }
-        else {
- 
-        operatorSignCounter = 0;
-        operatorSign = undefined;
-        arrayOfFirstSetNum = [];
-        arrayOfSecondSetNum = [];
-        otherThanNum = false;
         }
+        else if (["/", "*", "+", "-"].includes(target)) {
+            result = operator(arrayOfFirstSetNum, operatorSign, arrayOfSecondSetNum);
+            calcScreen.textContent = result;
+            if (typeof result !== "string"){
+            arrayOfFirstSetNum = Array.from(String(result));
+            arrayOfSecondSetNum = [];
+            operatorSignCounter = 1;
+            operatorSign = target;
+            }
+            else {
+                operatorSignCounter = 0;
+                operatorSign = undefined;
+                arrayOfFirstSetNum = [];
+                arrayOfSecondSetNum = [];
+                otherThanNum = false;
+        }
+        }
+
     }
 
     else if(Number.isFinite(Number(target))) {
@@ -77,9 +98,41 @@ numOrOperator.addEventListener('click', (event) => {
     }
 
     else if(arrayOfOperators.includes(target)) {
-        if (arrayOfSecondSetNum.length === 0 && operatorSignCounter === 1) {
-            calcScreen.textContent = target;
-            operatorSign = target;
+        if (arrayOfSecondSetNum.length === 0 && operatorSignCounter === 0 && target === "=") {
+            if (typeof arrayOfFirstSetNum === "number") {
+                calcScreen.textContent = arrayOfFirstSetNum;
+                operatorSignCounter = 0;
+                operatorSign = undefined;
+                otherThanNum = false;
+            }
+            else {
+                calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
+                operatorSignCounter = 0;
+                operatorSign = undefined;
+                otherThanNum = false;
+            }
+            
+        }
+        else if (arrayOfSecondSetNum.length === 0 && operatorSignCounter === 1) {
+            if (target === "=") {
+                if (typeof arrayOfFirstSetNum === "number") {
+                    calcScreen.textContent = arrayOfFirstSetNum;
+                    operatorSignCounter = 0;
+                    operatorSign = undefined;
+                    otherThanNum = false;
+                }
+                else {
+                    calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
+                    operatorSignCounter = 0;
+                    operatorSign = undefined;
+                    otherThanNum = false;
+                }
+            }
+            else {
+                calcScreen.textContent = target;
+                operatorSign = target;
+            }
+
         }
         else {
             calcScreen.textContent = target;
@@ -98,7 +151,7 @@ numOrOperator.addEventListener('click', (event) => {
             arrayOfSecondSetNum = [];
             otherThanNum = false;
         }
-        else if (target === "CLR") {
+        else if (target === "CE") {
             if (arrayOfFirstSetNum.length > 0 && typeof arrayOfFirstSetNum !== "number" && operatorSignCounter === 0 && arrayOfSecondSetNum.length === 0) {
                 arrayOfFirstSetNum.pop();
                 calcScreen.textContent = Number(arrayOfFirstSetNum.join("")).toLocaleString('en-US');
@@ -120,24 +173,19 @@ numOrOperator.addEventListener('click', (event) => {
                 arrayOfSecondSetNum.pop();
                 calcScreen.textContent = Number(arrayOfSecondSetNum.join("")).toLocaleString('en-US');
             }
-            //Detect last entry
-            //If last entry was to first, remove it from first
-            // else if in operator, remove it from operator
-            //else remove it from second
         }
-
     }
-    console.log(`this is the fype ${typeof arrayOfFirstSetNum}`);
-    console.log(`this is the len ${arrayOfFirstSetNum.length}`);
-    console.log(`this is the fist arr ${arrayOfFirstSetNum}`);
+console.log(`this is the operator sign ${operatorSign}`);
+console.log(`this is the operator sign counter ${operatorSignCounter}\n`);
+console.log("....")
+console.log(`this is the first arr ${arrayOfFirstSetNum}`);
+console.log(`this is the first arr type ${typeof arrayOfFirstSetNum}`);
+console.log(`this is the first arr length ${arrayOfFirstSetNum.length}\n`);
+console.log("....")
+console.log(`this is the other num indicator ${otherThanNum}`);
 
-    console.log(`this is the type ${typeof arrayOfSecondSetNum}`);
-    console.log(`this is the len ${arrayOfSecondSetNum.length}`);
-    console.log(`this is the second arr ${arrayOfSecondSetNum}`);
-    console.log(otherThanNum);
-    console.log(operatorSignCounter);
-    console.log(operatorSign);
-});
+};
+
 
 function operator(num1, opsSign, num2) {
     let firstOps;
@@ -162,13 +210,18 @@ function operator(num1, opsSign, num2) {
 
     switch (opsSign) {
         case ("+"):
-            return addOperator(firstOps, secondOps);
+            return firstOps + secondOps;
         case ("-"):
-            return subtractOperator(firstOps, secondOps);
+            return firstOps - secondOps;
         case ("*"):
-            return multiplyOperator(firstOps, secondOps)
+            return (Math.round((firstOps * secondOps) * 100) / 100);
         case ("/"):
-            return divideOperator(firstOps, secondOps);
+            if (secondOps === 0) {
+                return "Infinit Infinitum"
+            }
+            else {
+                return (Math.round((firstOps / secondOps) * 100) / 100);
+            }
     }
 }
 
@@ -178,27 +231,3 @@ function operator(num1, opsSign, num2) {
 
 
 
-
-function addOperator (firstNum, secondNum) {
-    return firstNum + secondNum;
-}
-
-function subtractOperator (firstNum, secondNum) {
-    return firstNum - secondNum;
-}
-
-function multiplyOperator (firstNum, secondNum) {
-    return (Math.round((firstNum * secondNum) * 100) / 100);
-}
-
-function divideOperator (firstNum, secondNum) {
-    if (secondNum === 0) {
-        return "Infinit Infinitum"
-    }
-    else {
-            return (Math.round((firstNum / secondNum) * 100) / 100);
-
-        }
-
-
-}
