@@ -7,7 +7,7 @@
     border: 2px solid rgb(115,115,115);
     background-color: rgb(240,240,240);
     width: 205px;
-    height: 330px;
+    height: 335px;
     border-radius: 20px 20px 10px 10px;
     padding: 10px;
     display: flex;
@@ -142,7 +142,7 @@
     font-size: 6px;
     color: rgb(75, 75, 75);
     width: 185px;
-    margin-top: 5px;
+    height: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
